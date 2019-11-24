@@ -1,0 +1,17 @@
+body{
+  font-family: 'Mansalva', cursive;
+  background-color: #354B58;
+  
+}
+
+.jumbotron{
+background: -webkit-linear-gradient(right, #17b5b4, #ddb9a9 ,#f6626e,#be044d, #b1010c);
+
+}
+
+h1{
+  text-align: center;
+}
+p{
+  font-size: 120%;
+}
