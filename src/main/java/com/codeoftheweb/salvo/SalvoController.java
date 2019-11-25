@@ -25,12 +25,14 @@ public class SalvoController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+
     @Autowired
-    SalvoController(GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, PlayerRepository playerRepository, ScoreRepository scoreRepository) {
+    SalvoController(GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, PlayerRepository playerRepository, ScoreRepository scoreRepository, ShipRepository shipRepository) {
         this.gameRepository = gameRepository;
         this.gamePlayerRepository = gamePlayerRepository;
         this.playerRepository = playerRepository;
         this.scoreRepository = scoreRepository;
+
     }
 
     @GetMapping("/games")
@@ -101,23 +103,60 @@ public class SalvoController {
 
 
     @RequestMapping("/games_view/{gamePlayerId}")
-    public ResponseEntity<Map<String, Object>> getGameView(@PathVariable long gamePlayerId, Authentication authentication){
+    public ResponseEntity<Map<String, Object>> getGameView(@PathVariable long gamePlayerId, Authentication authentication) {
         ResponseEntity<Map<String, Object>> response;
-        if(isGuest(authentication)) {
+        if (isGuest(authentication)) {
             response = new ResponseEntity<>(makeMap("error", "you must be looged in first"), HttpStatus.UNAUTHORIZED);
-        }else{
+        } else {
             GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayerId).orElse(null);
             Player player = playerRepository.findByUserName(authentication.getName());
-            if(gamePlayer == null) {
+            if (gamePlayer == null) {
                 response = new ResponseEntity<>(makeMap("error", "no such game"), HttpStatus.NOT_FOUND);
-            }else if(gamePlayer.getPlayer().getId() != player.getId()) {
+            } else if (gamePlayer.getPlayer().getId() != player.getId()) {
                 response = new ResponseEntity<>(makeMap("error", "this is not your game"), HttpStatus.UNAUTHORIZED);
-            }else{
+            } else {
                 response = new ResponseEntity<>(this.gameViewDTO(gamePlayer), HttpStatus.OK);
             }
         }
         return response;
     }
+
+    @RequestMapping(path = "/games/players/{gamePlayerId}/ships", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> addShips(Authentication authentication, @PathVariable Long gamePlayerId, @PathVariable List<Ship> ships) {
+        ResponseEntity<Map<String, Object>> response;
+        if (isGuest(authentication)) {
+            response = new ResponseEntity<>(makeMap("error", "you must be logged in"), HttpStatus.UNAUTHORIZED);
+        } else {
+            GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayerId).orElse(null);
+            Player player = playerRepository.findByUserName(authentication.getName());
+
+            if (gamePlayer == null) {
+                response = new ResponseEntity<>(makeMap("error", "no such game"), HttpStatus.NOT_FOUND);
+            } else if (gamePlayer.getPlayer().getId() != player.getId()) {
+                response = new ResponseEntity<>(makeMap("error", "this is not your game"), HttpStatus.FORBIDDEN);
+            } else if (gamePlayer.getShips().size() > 0) {
+                response = new ResponseEntity<>(makeMap("error", "you already have ships"), HttpStatus.FORBIDDEN);
+            } else if (ships == null || ships.size() != 5) {
+                response = new ResponseEntity<>(makeMap("error", "you must add 5 ships"), HttpStatus.FORBIDDEN);
+            }else{
+                if (ships.stream().anyMatch(ship -> this.isOutOfRange(ship))){
+                    response = new ResponseEntity<>(makeMap("error", "you have ships out of range"), HttpStatus.FORBIDDEN);
+                }else if(ships.stream().anyMatch(ship -> this.isNotConsecutive(ship))){
+                    response  = new ResponseEntity<>(makeMap("error", "your ships are not consecutive"), HttpStatus.FORBIDDEN);
+                }else if(this.areOverLapped(ships)){
+                    response = new ResponseEntity<>(makeMap("error", "your shis are overlapped"), HttpStatus.FORBIDDEN);
+                }else{
+                    ships.forEach(ship -> gamePlayer.addShip(ship));
+                    gamePlayerRepository.save(gamePlayer);
+                    response = new ResponseEntity<>(makeMap("success", "ships added"), HttpStatus.CREATED);
+                }
+            }
+
+        }
+        return response;
+    }
+
+
 
 
     private Map<String, Object> gameViewDTO(GamePlayer gamePlayer) {
@@ -157,5 +196,56 @@ public class SalvoController {
         return authentication == null;
     }
 
-    
+    private boolean isOutOfRange(Ship ship){
+    for(String cell : ship.getLocations()){
+        if(!(cell instanceof String ) || cell.length() < 2){
+            return true;
+        }
+        char y = cell.substring(0,1).charAt(0);
+        Integer x;
+        try {
+            x = Integer.parseInt(cell.substring(1));
+        }catch(NumberFormatException e){
+            x = 99;
+        };
+        if(x < 1 || x > 10 || y < 'A' || y > 'J'){
+            return true;
+        }
+    }
+    return false;
+    }
+    private boolean isNotConsecutive(Ship ship){
+        List<String> cells = ship.getLocations();
+        boolean isVertical = cells.get(0).charAt(0) != cells.get(1).charAt(0);
+        for(int i = 0; i < cells.size(); i++){
+            if(i < cells.size() - 1){
+                if(isVertical){
+                    char yChar = cells.get(i).substring(0,1).charAt(0);
+                    char compareChar = cells.get(i + 1).substring(0,1).charAt(0);
+                    if(compareChar - yChar !=1){
+                        return true;
+                    }
+                } else {
+                    Integer xInt = Integer.parseInt(cells.get(i).substring(1));
+                    Integer compareInt = Integer.parseInt(cells.get(i + 1).substring(1));
+                return true;
+                }
+            }
+        }
+    return false;
+    }
+    private boolean areOverLapped(List<Ship> ships){
+        List<String> allCells = new ArrayList<>();
+        ships.forEach(ship -> allCells.addAll(ship.getLocations()));
+        for(int i = 0; i < allCells.size(); i++){
+            for(int j = i + 1; j <allCells.size(); j ++){
+                if(allCells.get(i).equals(allCells.get(j))){
+                    return true;
+                }
+            }
+        }
+        return false;
 }
+
+}
+

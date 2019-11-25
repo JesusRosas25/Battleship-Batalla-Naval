@@ -7,11 +7,12 @@ let player =[];
 var app = new Vue({
   el: "#app",
   data: {
-      
+      players: {},
         jsongames: [],
         posPlayer: pos
   }
 })
+
 
 function bottons(inlogin){
   switch(inlogin){
@@ -35,6 +36,7 @@ function getData(){
   fetch("/api/games").then(function(response){if(response.ok){return response.json()}
 }).then(function (json){
     jsongames = json;
+    app.players = json.players
       createPos();
       createScore();
       createGames();
