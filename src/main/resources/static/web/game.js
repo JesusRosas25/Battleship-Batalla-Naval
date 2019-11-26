@@ -6,9 +6,6 @@ let player
 let opponent
 let salvoes
 
-
-
-
 getGameData(gp)
 
 function getGameData(gpId){
@@ -57,24 +54,6 @@ function getSalvoes(salvoes){
   }))
 
 }
-/*function getTurn (){
-  var array=[]
-  var turn = 0;
-
-  gridInfo.salvoes.map(function(salvo){
-    if(salvo.player == getGameData.id){
-      array.push(salvo.turn);
-    }
-  })
-  turn = Math.max.apply(Math, arr);
-  
-  if (turn == -Infinity){
-    return 1;
-  } else {
-    return turn + 1;
-  }
-  
-}*/
 
 
 function getPlayerId(gpId){
@@ -91,4 +70,9 @@ function getPlayerId(gpId){
 }
 }
 
+function getShips(){
+  fetch('/games/players/{gamePlayerId}/ships',{method: 'POST',})
+    .then
+  },})
+}
 
