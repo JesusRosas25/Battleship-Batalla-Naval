@@ -170,13 +170,14 @@ public class SalvoController {
             dto.put("player", gamePlayer.getPlayer().getUserName());
             dto.put("ships", gamePlayer.getShips().stream().map(Ship::ShipDTO));
             dto.put("salvoes",gamePlayer.getGame().getGamePlayers().stream().flatMap(gp->gp.getSalvoes().stream().map(salvo -> salvo.SalvoDTO())));
-            dto.put("scores",gamePlayer.getScore().getPoints());
-            dto.put("finishDate", gamePlayer.getScore().getFinishDate());
-
+            if(gamePlayer.getScore() != null){
+                dto.put("scores",gamePlayer.getScore().getPoints());
+            } else {
+                dto.put("scores", null);
+            }
 
         } else {
             dto.put("Error", "No such game");
-
         }
         return dto;
 

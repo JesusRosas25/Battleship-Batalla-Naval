@@ -31,7 +31,7 @@ const createGrid = function(size, element, id){
                 textNode.innerText = String.fromCharCode(i+64)
                 cell.appendChild(textNode)
             }
-            //if i is equal to 0, the cells belongs to the first row, so the number is added as text node
+            //if i is equal to 0, the  belongs to the first row, so the number is added as text node
             if(i === 0 && j > 0){
                 let textNode = document.createElement('SPAN')
                 textNode.innerText = j

@@ -79,12 +79,12 @@ public class SalvoApplication {
             gamePlayerRepository.save(gp3);
             gamePlayerRepository.save(gp4);
 
-            /*scoreRepository.save(new Score(game1,player1, LocalDateTime.now().plusMinutes(50),0.0));
+            scoreRepository.save(new Score(game1,player1, LocalDateTime.now().plusMinutes(50),0.0));
             scoreRepository.save(new Score(game1,player5, LocalDateTime.now().plusMinutes(50),0.0));
             scoreRepository.save(new Score(game2,player3, LocalDateTime.now().plusMinutes(44),0.0));
             scoreRepository.save(new Score(game2,player4, LocalDateTime.now().plusMinutes(44),0.0));
 			scoreRepository.save(new Score(game3,player2, LocalDateTime.now().plusMinutes(25),0.0));
-			scoreRepository.save(new Score(game3,player4, LocalDateTime.now().plusMinutes(25),0.0));*/
+			scoreRepository.save(new Score(game3,player4, LocalDateTime.now().plusMinutes(25),0.0));
 		};
 
 	}

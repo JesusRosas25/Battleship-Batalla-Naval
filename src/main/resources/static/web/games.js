@@ -163,7 +163,7 @@ function createGames() {
       gms += `<li>Player: ${tableArray[i].gamePlayer[gp].player.username}</li>`;
       
       if(jsongames.player.id === tableArray[i].gamePlayer[gp].player.id){
-      gms += `<li><a href="/web/game.html?gp=${tableArray[i].gamePlayer[gp].id}"><button id="gp_${tableArray[i].gamePlayer[gp].id}" class="btn btn-danger" type="button" ><span class="spinner-grow spinner-grow-sm"></span>Enter!</button></li></a>`
+      gms += `<li><a href="/web/game.html?gp=${tableArray[i].gamePlayer[gp].id}"><button id="gp_${tableArray[i].gamePlayer[gp].id}" class="btn btn-danger" type="button" ><span class="spinner-grow spinner-grow-sm"></span>Enter!</button></a></li>`
       }
       }
           }

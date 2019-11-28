@@ -203,9 +203,8 @@ const createShips = function(shipType, length, orientation, parent, isStatic){
 
     
 }
-/*
 createShips('carrier', 5, 'horizontal', document.getElementById('dock'),false)
 createShips('battleship', 4, 'horizontal', document.getElementById('dock'),false)
 createShips('submarine', 3, 'horizontal', document.getElementById('dock'),false)
 createShips('destroyer', 3, 'horizontal', document.getElementById('dock'),false)
-createShips('patrol_boat', 2, 'horizontal', document.getElementById('dock'),false)*/
+createShips('patrol_boat', 2, 'horizontal', document.getElementById('dock'),false)
