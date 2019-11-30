@@ -4,11 +4,11 @@ let params = new URLSearchParams(location.search)
 let gp = params.get('gp')
 let player
 let opponent
-let salvoes
+//let salvoes
 var getGameData;
 
 getGameData(gp)
-
+//trae la informacion del juego
 function getGameData(gpId){
 
 fetch(`/api/games_view/${gpId}`)
@@ -43,7 +43,7 @@ $("#back").click(function(){
   window.location.replace("/web/games.html");
 })
 //Funcion para los id de gamePlayer
-function getGpId (gp){
+function getGpId(gp){
     var Gp = gp.slice(gp.indexOf("=")+1);
     return Gp;
 }
@@ -85,7 +85,7 @@ function getShipsLocations(tipo){
 
 }*/
 
-
+//Obtiene los players para mostrarlos en pantalla
 function getPlayerId(gpId){
   for (var i in gridInfo.gamePlayer){
       if (gpId == gridInfo.gamePlayer[i].id){
@@ -99,8 +99,8 @@ function getPlayerId(gpId){
   }
 }
 }
-//CREA UN OBJETO CON LAS UBICACIONES DE LOS BARCOS
-function setShipsPositions(){
+//Crea un objet con las ubicaciones de los barcos
+function setShipsPos(){
     let ships= [];
 
     ships.push({type: 'carrier', locations: getShipsLocations('carrier')})
@@ -112,18 +112,21 @@ function setShipsPositions(){
     return ships
 }
 
-//REALIZA EL POST EN LA DB CON LOS BARCOS POSICIONADOS
+//Realiza el POST de los barcos en la base de datos
 function sendShips(){
 
     param= new URLSearchParams(window.location.search)
-
+    getGpId(url)
     url="/api/games/players/"+getGpId(url)+"/ships"
-    data= setShipsPositions()
+    data= setShipsPos()
     
-    fetch(url, {method: "POST", 
-    body: JSON.stringify(data),
-    dataType: "text",
-    ContentType: 'application/json'})
+    fetch(url, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": 'application/json'
+      }
+      })
         .then(function(response){
             if(response.ok){
                 return response.json()
@@ -131,7 +134,7 @@ function sendShips(){
                 return Promise.reject(response.json())
             }
         }).then(function(json){
-            redrawShips();
+            restoringShips();
             getShipsPositions();
             getGameData(getGpId(url));
             document.getElementById('in-position').style.display= 'none'
@@ -141,13 +144,13 @@ function sendShips(){
             console.log(error.message)
         }).then(function(json){
             
-            document.querySelector("#display p").innerText = 'error'
+            document.querySelector("#display p").innerText = 'error!!!'
             
         })
 }
 
-//QUITA LOS BARCOS DE LA GRILLA PARA VOLVER A DIBUJARLOS ESTATICOS
-function redrawShips(){
+//Restable la ubicacion de los barcos en la grilla
+function restoringShips(){
     document.getElementById('carrier').remove()
     document.getElementById('battleship').remove()
     document.getElementById('submarine').remove()

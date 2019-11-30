@@ -3,11 +3,11 @@ var pos= {
 }
 let buttons = [];
 let scores = [];
-let player =[];
+
 var app = new Vue({
   el: "#app",
   data: {
-      players: {},
+      player: {},
         jsongames: [],
         posPlayer: pos
   }
@@ -20,6 +20,7 @@ function bottons(inlogin){
           document.getElementById('login-button').style.display='none'
           document.getElementById('loginMod').style.display= 'none'
           document.getElementById('loginModal').style.display= 'block'
+          
           break;
       case false:
           document.getElementById('login-button').style.display='none'
@@ -36,7 +37,7 @@ function getData(){
   fetch("/api/games").then(function(response){if(response.ok){return response.json()}
 }).then(function (json){
     jsongames = json;
-    app.players = json.players
+    app.player = json.player
       createPos();
       createScore();
       createGames();
@@ -101,7 +102,7 @@ function login(){
           inlogin= true;
           bottons(inlogin);
           getData();
-          alert("Welcome")
+          
           
                       })          
                       .fail(function(){

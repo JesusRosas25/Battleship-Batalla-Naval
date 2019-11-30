@@ -13,9 +13,10 @@
     <body>
             
             <div class="jumbotron" id="encabezado">
-              
+            <button type="button" class="btn btn-warning"  id="back" data-target="#back">Back</button> 
+              <button type="button" class="btn btn-primary"  id="logoutbtn" data-target="#logout">Logout</button>
                 <h1>Game for</h1>
-                <h4 class="text-center font-weight-bold"> Player
+                <h4 class="text-center font-weight-bold">
                     <span id="gamer1"></span>
                     vs
                     <span id="gamer2"></span>
@@ -28,10 +29,10 @@
             <!--div class="container" id="content"-->
             <div class="flex-container">
               <div id="dock">
-                  
+                <button type="button" class="btn btn-danger" onclick="sendShips()"  id="in-position" data-target="#in-position">In position</button> 
                   <div id="display">
                       <p>Welcome...<span id="gamer1"></span> </p>
-                      
+                       
                       </div>
                         
                   
@@ -40,9 +41,10 @@
               
               
             </div>
-              <div class= "grid-container" id="grid" >
+            
+              <div class= "grid-ships" id="grid">
             </div>
-            <div class= "grid-container" id="gridSalvo">
+            <div class= "grid-salvos" id="gridSalvo">
                   <!--The grid will appear here -->
             </div>
             </div>

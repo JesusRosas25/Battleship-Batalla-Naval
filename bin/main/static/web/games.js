@@ -3,15 +3,16 @@ var pos= {
 }
 let buttons = [];
 let scores = [];
-let player =[];
+
 var app = new Vue({
   el: "#app",
   data: {
-      
+      player: {},
         jsongames: [],
         posPlayer: pos
   }
 })
+
 
 function bottons(inlogin){
   switch(inlogin){
@@ -19,6 +20,7 @@ function bottons(inlogin){
           document.getElementById('login-button').style.display='none'
           document.getElementById('loginMod').style.display= 'none'
           document.getElementById('loginModal').style.display= 'block'
+          
           break;
       case false:
           document.getElementById('login-button').style.display='none'
@@ -35,6 +37,7 @@ function getData(){
   fetch("/api/games").then(function(response){if(response.ok){return response.json()}
 }).then(function (json){
     jsongames = json;
+    app.player = json.player
       createPos();
       createScore();
       createGames();
@@ -99,7 +102,7 @@ function login(){
           inlogin= true;
           bottons(inlogin);
           getData();
-          alert("Welcome")
+          
           
                       })          
                       .fail(function(){
@@ -161,7 +164,7 @@ function createGames() {
       gms += `<li>Player: ${tableArray[i].gamePlayer[gp].player.username}</li>`;
       
       if(jsongames.player.id === tableArray[i].gamePlayer[gp].player.id){
-      gms += `<li><a href="/web/game.html?gp=${tableArray[i].gamePlayer[gp].id}"><button id="gp_${tableArray[i].gamePlayer[gp].id}" class="btn btn-danger" type="button" ><span class="spinner-grow spinner-grow-sm"></span>Enter!</button></li></a>`
+      gms += `<li><a href="/web/game.html?gp=${tableArray[i].gamePlayer[gp].id}"><button id="gp_${tableArray[i].gamePlayer[gp].id}" class="btn btn-danger" type="button" ><span class="spinner-grow spinner-grow-sm"></span>Enter!</button></a></li>`
       }
       }
           }

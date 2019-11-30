@@ -122,7 +122,7 @@ public class SalvoController {
     }
 
     @RequestMapping(path = "/games/players/{gamePlayerId}/ships", method = RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> addShips(Authentication authentication, @PathVariable Long gamePlayerId, @PathVariable List<Ship> ships) {
+    public ResponseEntity<Map<String, Object>> addShips(Authentication authentication, @PathVariable Long gamePlayerId, @RequestBody List<Ship> ships) {
         ResponseEntity<Map<String, Object>> response;
         if (isGuest(authentication)) {
             response = new ResponseEntity<>(makeMap("error", "you must be logged in"), HttpStatus.UNAUTHORIZED);
@@ -133,7 +133,7 @@ public class SalvoController {
             if (gamePlayer == null) {
                 response = new ResponseEntity<>(makeMap("error", "no such game"), HttpStatus.NOT_FOUND);
             } else if (gamePlayer.getPlayer().getId() != player.getId()) {
-                response = new ResponseEntity<>(makeMap("error", "this is not your game"), HttpStatus.FORBIDDEN);
+                response = new ResponseEntity<>(makeMap("error", "this is not your game"), HttpStatus.UNAUTHORIZED);
             } else if (gamePlayer.getShips().size() > 0) {
                 response = new ResponseEntity<>(makeMap("error", "you already have ships"), HttpStatus.FORBIDDEN);
             } else if (ships == null || ships.size() != 5) {
@@ -144,7 +144,7 @@ public class SalvoController {
                 }else if(ships.stream().anyMatch(ship -> this.isNotConsecutive(ship))){
                     response  = new ResponseEntity<>(makeMap("error", "your ships are not consecutive"), HttpStatus.FORBIDDEN);
                 }else if(this.areOverLapped(ships)){
-                    response = new ResponseEntity<>(makeMap("error", "your shis are overlapped"), HttpStatus.FORBIDDEN);
+                    response = new ResponseEntity<>(makeMap("error", "your ships are overlapped"), HttpStatus.FORBIDDEN);
                 }else{
                     ships.forEach(ship -> gamePlayer.addShip(ship));
                     gamePlayerRepository.save(gamePlayer);
@@ -155,9 +155,6 @@ public class SalvoController {
         }
         return response;
     }
-
-
-
 
     private Map<String, Object> gameViewDTO(GamePlayer gamePlayer) {
         Map<String, Object> dto = new LinkedHashMap<>();
@@ -182,12 +179,6 @@ public class SalvoController {
         return dto;
 
     }
-
-
-
-
-
-
     private Map<String, Object> makeMap(String key, Object value) {
         Map<String, Object> map = new HashMap<>();
         map.put(key, value);
