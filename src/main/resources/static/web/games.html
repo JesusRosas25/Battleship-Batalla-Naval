@@ -77,7 +77,7 @@
         
      
             <section >
-               <div id= "app" class="container">
+               <div  class="container">
                    <div class="row">    
                 <div id="games" class="col-sm-6">
                             <h1>Games</h1>
@@ -101,12 +101,12 @@
             
             </thead>
             <tbody >
-            <tr v-for = "p in posPlayer.board ">
-            <td >{{p.userName}}</td>
-            <td>{{p.points}}</td>
-            <td>{{p.won}}</td>
-            <td>{{p.lost}}</td>
-            <td>{{p.tied}}</td>
+            <tr v-for = "pos in jsongames.gamePlayer">
+            <td >{{pos.username}}</td>
+            <td>{{pos.points}}</td>
+            <td>{{pos.won}}</td>
+            <td>{{pos.lost}}</td>
+            <td>{{pos.tied}}</td>
             </tr>
             </tbody>
             </table>

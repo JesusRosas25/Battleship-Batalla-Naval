@@ -2,12 +2,12 @@ var pos= {
 "board": []
 }
 let buttons = [];
-let scores = [];
+
 
 var app = new Vue({
   el: "#app",
   data: {
-      player: {},
+      player: [],
         jsongames: [],
         posPlayer: pos
   }
@@ -33,13 +33,12 @@ function bottons(inlogin){
 
 //funcion para hacer el fetch de games
 function getData(){
-  
+ pos.board = [];
   fetch("/api/games").then(function(response){if(response.ok){return response.json()}
 }).then(function (json){
     jsongames = json;
     app.player = json.player
       createPos();
-      createScore();
       createGames();
       bottons();
       
@@ -48,28 +47,25 @@ function getData(){
 getData();
 
 //funcion para recorrer games y traer los scores
-function createPos (jsongames){
-jsongames.forEach
-for(var i = 0; i< player.gamePlayer;){ 
-  for(var j = 0; j < jsongames.gamePlayer[i].length; j++){
-    for(var k = 0; k < players[j].length; k++){
-  var rev = pos.board.find(function(player){ return players.id == games[i].gamePlayer[j].players.id });
+function createPos (){
+for(var i in jsongames.games){ 
+  for(var j in jsongames.games[i].gamePlayer){
+  var rev = pos.board.find(function(player){ return player.id == jsongames.games[i].gamePlayer[j].player.id});
           if (rev == undefined){
               var obj = new Object();
-              obj.userName = games[i].gamePlayer[j].players.userName;
-              obj.creationDate = games[i].creationDate;
+              obj.userName = jsongames.games[i].gamePlayer[j].player.userName;
               obj.points = 0;
               obj.won = 0;
               obj.lost = 0;
               obj.tied = 0;
               pos.board.push(obj);
           }
-          createScore(games[i].gamePlayer[j].players.score, games[i].gamePlayer[j].player.id, games[i].creationDate);
-
+          createScore(jsongames.games[i].gamePlayer[j].player.score, jsongames.games[i].gamePlayer[j].player.id);
+          //console.log( '%c jsongames.games[i].gamePlayer[j].player.score', ' color: #156c77; font-weight: bold; ' );
         }
       }
     }    
-  }
+  
     
 
 
@@ -101,9 +97,7 @@ function login(){
           $("#loginModal");
           inlogin= true;
           bottons(inlogin);
-          getData();
-          
-          
+          getData(); 
                       })          
                       .fail(function(){
                         alert("Wrong username or password")

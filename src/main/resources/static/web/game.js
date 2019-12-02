@@ -1,14 +1,14 @@
 
-let gridInfo
+let gridInfo = "";
 let params = new URLSearchParams(location.search)
 let gp = params.get('gp')
 let player
 let opponent
-//let salvoes
 var getGameData;
 
+
 getGameData(gp)
-//trae la informacion del juego
+
 function getGameData(gpId){
 
 fetch(`/api/games_view/${gpId}`)
@@ -22,12 +22,21 @@ fetch(`/api/games_view/${gpId}`)
 .then(json=>{
   gridInfo = json;
   getPlayerId(gpId);
-  getShips(gridInfo.ships);
-  getSalvoes(gridInfo.salvoes);
+  
   
 })
 
 .catch(error =>console.log(error))
+}
+function shots(){
+  fetch(`/api/game_view/${gpId}`)
+  .then(res=> {
+    res.json();
+
+  }).then(json=>{
+    gridInfo = json;
+
+  })
 }
 
 //function para desloguearse
@@ -77,7 +86,7 @@ function getPlayerId(gpId){
   }
 }
 }
-//Crea un objet con las ubicaciones de los barcos
+//Crea un objeto con las ubicaciones de los barcos
 function setShipsPos(){
     let ships= [];
 
@@ -122,7 +131,7 @@ function sendShips(){
             console.log(error.message)
         }).then(function(json){
             
-            document.querySelector("#display p").innerText = 'error!!!'
+            document.querySelector("#display").innerText = 'error!!!'
             
         })
 }
@@ -136,3 +145,48 @@ function restoringShips(){
     document.getElementById('patrol_boat').remove()
 }
 
+//Realiza el POST de los salvoes en la base de datos
+function sendSalvos(){
+
+  param= new URLSearchParams(window.location.search)
+  getGpId(url)
+  url="/api/games/players/"+getGpId(url)+"/salvoes"
+  data= setSalvoesPos()
+  
+  fetch(url, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": 'application/json'
+    }
+    
+    })
+      .then(function(response){
+          if(response.ok){
+              return response.json()
+          }else{
+              return Promise.reject(response.json())
+          }
+      }).then(function(json){
+          shots()
+          document.getElementById('fire').style.display= 'block'
+        
+          
+      }).catch(function(error){
+          console.log(error.message)
+      }).then(function(json){
+          
+          document.querySelector("#display").innerText = 'error!!!'
+          
+      })
+}
+//muestra el boton para los salvos
+function showButton(){
+  if(gridInfo){
+      document.getElementById('fire').style.display= 'block'
+      
+  }else{
+    document.querySelector("#display").innerText = 'error!!!'
+      
+  }
+}
