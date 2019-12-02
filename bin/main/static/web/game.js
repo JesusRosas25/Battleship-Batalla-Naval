@@ -61,29 +61,7 @@ function getShipsLocations(tipo){
     return locations
 
 }
-/*function getShips(ships){
-  ships.forEach(ship => {
-    createShips(ship.type,
-      ship.locations.length,
-      ship.locations[0][0] == ship.locations[1][0] ? "horizontal": "vertical" ,
-      
-    document.getElementById(`ships${ship.locations[0]}`),
-    true
-  )
-  })
-}*/
-/*function getSalvoes(salvoes){
 
-  salvoes.forEach(salvo => salvo.locations.forEach( loc => {
-    if(player.id == salvo.playerId){
-      document.getElementById("salvoes"+loc).style.background = "red"
-    }else{
-      document.getElementById("ships"+loc).style.background = "red"
-    }
- 
-  }))
-
-}*/
 
 //Obtiene los players para mostrarlos en pantalla
 function getPlayerId(gpId){
@@ -149,7 +127,7 @@ function sendShips(){
         })
 }
 
-//Restable la ubicacion de los barcos en la grilla
+//Restablece la ubicacion de los barcos en la grilla
 function restoringShips(){
     document.getElementById('carrier').remove()
     document.getElementById('battleship').remove()
@@ -158,38 +136,3 @@ function restoringShips(){
     document.getElementById('patrol_boat').remove()
 }
 
-/*function addShips(){
-$.post({
-  url: "/api/games/players/"+getGpId(url)+"/ships", 
-  data: JSON.stringify(json),
-  dataType: "text",
-  contentType: "application/json"
-})
-.done(function () {
-  console.log("done");
-  getGameData(getGpId(url));
-})
-.fail(function () {
-  console.log("fail");
-
-})
-
-$("#in-position").click(function(){
-    var obj = new Object();
-    var arr = [];
-    if($(this).attr("data-gs-width") != "1"){
-      for(var i = 0; i < parseInt($(this).attr("data-gs-width")); i++){
-        arr.push(String.fromCharCode(parseInt($(this).attr("data-gs-y"))+65)+(parseInt($(this).attr("data-gs-x"))+i+1).toString());
-      }
-    } else{
-      for(var i = 0; i < parseInt($(this).attr("data-gs-height")); i++){
-        arr.push(String.fromCharCode(parseInt($(this).attr("data-gs-y"))+i+65)+(parseInt($(this).attr("data-gs-x"))+1).toString());
-      }
-    }
-    
-    obj.type = $(this).children();
-    obj.cells = arr;
-    data.push(obj);
-  })
-  addShips(); 
-}*/

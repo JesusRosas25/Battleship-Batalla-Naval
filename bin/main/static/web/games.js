@@ -13,7 +13,7 @@ var app = new Vue({
   }
 })
 
-
+//funcion para los botones 
 function bottons(inlogin){
   switch(inlogin){
       case true:
@@ -48,14 +48,14 @@ function getData(){
 getData();
 
 //funcion para recorrer games y traer los scores
-function createPos (){
-for(var i = 0; i< jsongames.length; i++){ 
-  for(var j = 0; j < gamePlayer[i].length; j++){
+function createPos (jsongames){
+jsongames.forEach
+for(var i = 0; i< player.gamePlayer;){ 
+  for(var j = 0; j < jsongames.gamePlayer[i].length; j++){
     for(var k = 0; k < players[j].length; k++){
   var rev = pos.board.find(function(player){ return players.id == games[i].gamePlayer[j].players.id });
           if (rev == undefined){
               var obj = new Object();
-              
               obj.userName = games[i].gamePlayer[j].players.userName;
               obj.creationDate = games[i].creationDate;
               obj.points = 0;
