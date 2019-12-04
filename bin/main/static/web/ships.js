@@ -208,3 +208,19 @@ createShips('battleship', 4, 'horizontal', document.getElementById('dock'),false
 createShips('submarine', 3, 'horizontal', document.getElementById('dock'),false)
 createShips('destroyer', 3, 'horizontal', document.getElementById('dock'),false)
 createShips('patrol_boat', 2, 'horizontal', document.getElementById('dock'),false)
+
+function checkShipsLocated(){
+    
+    let children= document.getElementById('dock').children
+    let names= ["carrier","battleship","submarine","destroyer","patrol_boat"]
+
+    for(let i=0; i<children.length; i++){
+        if(names.includes(children[i].id)){
+            document.getElementById('place_ships').disabled= true;
+        }else{
+            document.getElementById('place_ships').disabled= false;
+        }
+    }
+
+
+}

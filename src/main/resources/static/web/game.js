@@ -7,11 +7,20 @@ let opponent
 var getGameData;
 
 
+//TOMA EL GP DE LA URL
+function getParamGP(){
+	
+	let param= (new URL(document.location)).searchParams;
+	let gp= parseInt(param.get('gp'));
+
+	return gp;
+}
+
 getGameData(gp)
 
 function getGameData(gpId){
 
-fetch(`/api/games_view/${gpId}`)
+fetch("/api/games_view/"+getParamGP())
 .then(res => {
   if(res.ok){
     return res.json()
@@ -28,14 +37,15 @@ fetch(`/api/games_view/${gpId}`)
 
 .catch(error =>console.log(error))
 }
-function shots(){
-  fetch(`/api/game_view/${gpId}`)
-  .then(res=> {
-    res.json();
+//Actualiza los datos del juego
+function getShipsPos(){
+  fetch("/api/games_view/"+getParamGP())
+  .then(function(response){
+    return response.json();
 
-  }).then(json=>{
-    gridInfo = json;
-
+  }).then(function(json){
+    gridInfo = json; 
+    setShips(gridInfo)
   })
 }
 
@@ -53,12 +63,33 @@ $("#back").click(function(){
 })
 //Funcion para los id de gamePlayer
 function getGpId(gp){
-    var Gp = gp.slice(gp.indexOf("=")+1);
-    return Gp;
+    var newGp = gp.slice(gp.indexOf("=")+1);
+    return newGp;
 }
 
 var url = window.location.href;
 getGameData(getGpId(url))
+
+
+//ubica los barcos en la grilla
+function setShips(json){
+  if(json.ships.length !== 0){
+    document.getElementById('in-position').style.display= 'none'
+    
+      for(let i = 0; i < json.ships.length;i++){
+        let location = json.ships[i].locations[0]
+        let orientation = json.ships[i].locations[0].substring(1) == json.ships[i].locations[1].substring(1) ? 'vertical' : 'horizontal'
+        let tipo = json.ships[i].type
+        let size = json.ships[i].locations.length
+        createShips(tipo.toLowerCase(), size, orientation, document.getElementById('ships'+location),true)
+        //createShips(type.toLowerCase(), getShipLength(obj.ships[ship].ship), getOrientation(obj.ships[ship].locations), document.getElementById(`ships${obj.ships[ship].locations[0]}`), true);
+    
+
+document.getElementById('in-position').style.display= 'none'  
+}
+}
+}
+
 
 //Devuelve la ubicacion de los barcos
 function getShipsLocations(tipo){
@@ -90,11 +121,11 @@ function getPlayerId(gpId){
 function setShipsPos(){
     let ships= [];
 
-    ships.push({type: 'carrier', locations: getShipsLocations('carrier')})
-    ships.push({type: 'battleship', locations: getShipsLocations('battleship')})
-    ships.push({type: 'submarine', locations: getShipsLocations('submarine')})
-    ships.push({type: 'destroyer', locations: getShipsLocations('destroyer')})
-    ships.push({type: 'patrol_boat', locations: getShipsLocations('patrol_boat')})
+    ships.push({type: 'CARRIER', locations: getShipsLocations('carrier')})
+    ships.push({type: 'BATTLESHIP', locations: getShipsLocations('battleship')})
+    ships.push({type: 'SUBMARINE', locations: getShipsLocations('submarine')})
+    ships.push({type: 'DESTROYER', locations: getShipsLocations('destroyer')})
+    ships.push({type: 'PATROL_BOAT', locations: getShipsLocations('patrol_boat')})
 
     return ships
 }
@@ -103,11 +134,11 @@ function setShipsPos(){
 function sendShips(){
 
     param= new URLSearchParams(window.location.search)
-    getGpId(url)
-    url="/api/games/players/"+getGpId(url)+"/ships"
+    getGpId(gp)
+    url="/api/games/players/"+getGpId(gp)+"/ships"
     data= setShipsPos()
     
-    fetch(url, {
+    fetch(url,{
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -121,17 +152,17 @@ function sendShips(){
                 return Promise.reject(response.json())
             }
         }).then(function(json){
-            restoringShips();
-            getShipsPositions();
-            getGameData(getGpId(url));
+            restoringShips()
+            getShipsPos()
+            
             document.getElementById('in-position').style.display= 'none'
           
             
         }).catch(function(error){
             console.log(error.message)
         }).then(function(json){
+            console.log("error")
             
-            document.querySelector("#display").innerText = 'error!!!'
             
         })
 }
@@ -146,20 +177,19 @@ function restoringShips(){
 }
 
 //Realiza el POST de los salvoes en la base de datos
-function sendSalvos(){
+function sendSalvoes(shots,gamePlayerId){
 
   param= new URLSearchParams(window.location.search)
-  getGpId(url)
-  url="/api/games/players/"+getGpId(url)+"/salvoes"
-  data= setSalvoesPos()
+  getGpId(gp)
+  url="/api/games/players/"+getGpId(gp)+"/salvoes"
+  
   
   fetch(url, {
     method: "POST",
-    body: JSON.stringify(data),
+    body: JSON.stringify(shots),
     headers: {
       "Content-Type": 'application/json'
-    }
-    
+    }    
     })
       .then(function(response){
           if(response.ok){
@@ -168,25 +198,31 @@ function sendSalvos(){
               return Promise.reject(response.json())
           }
       }).then(function(json){
-          shots()
+        getShipsPos()
+          document.getElementById('available_salvo').remove()
           document.getElementById('fire').style.display= 'block'
-        
           
-      }).catch(function(error){
-          console.log(error.message)
+          
+      }).catch(function(json){
+        return json;
+          
       }).then(function(json){
-          
+        console.log("errorMsg")
           document.querySelector("#display").innerText = 'error!!!'
           
       })
 }
-//muestra el boton para los salvos
-function showButton(){
-  if(gridInfo){
-      document.getElementById('fire').style.display= 'block'
-      
-  }else{
-    document.querySelector("#display").innerText = 'error!!!'
-      
-  }
+//Habilita las celdas donde se disparo
+function disableAimed(){
+    let apuntados= document.querySelectorAll('.aimedSalvo')
+
+    apuntados.forEach(apuntado => apuntado.classList.remove('aimedSalvo'))
+}
+//recarga los datos del juego
+var recharge
+
+function waitOpponent(){
+    recharge= setTimeout(function() { 
+                                rechargeGridInfo()
+                                }, 6000);
 }

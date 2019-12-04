@@ -18,8 +18,7 @@ function bottons(inlogin){
   switch(inlogin){
       case true:
           document.getElementById('login-button').style.display='none'
-          document.getElementById('loginMod').style.display= 'none'
-          document.getElementById('loginModal').style.display= 'block'
+          
           
           break;
       case false:
@@ -48,23 +47,39 @@ getData();
 
 //funcion para recorrer games y traer los scores
 function createPos (){
+  let tabla= document.getElementById('leaders');
+  let str= ""
 for(var i in jsongames.games){ 
   for(var j in jsongames.games[i].gamePlayer){
-  var rev = pos.board.find(function(player){ return player.id == jsongames.games[i].gamePlayer[j].player.id});
+    
+  let unic = new Set(jsonGames.games[i].gamePlayer[j].player.username);
           if (rev == undefined){
               var obj = new Object();
-              obj.userName = jsongames.games[i].gamePlayer[j].player.userName;
-              obj.points = 0;
+              
+              obj.userName = jsongames.games[i].gamePlayer[j].player.username;
+              obj.points = jsongames.games[i].gamePlayer[j].player.points;
               obj.won = 0;
               obj.lost = 0;
               obj.tied = 0;
               pos.board.push(obj);
+              
+              createScore();
+              str += `<tr>
+          <td>${unic}</td>
+          <td>${jsongames.games[i].gamePlayer[j].player.points}</td>
+          <td>${obj.won}</td>
+          <td>${obj.tied}</td>
+          <td>${obj.lost}</td>
+      </tr>`
           }
-          createScore(jsongames.games[i].gamePlayer[j].player.score, jsongames.games[i].gamePlayer[j].player.id);
+          tabla.innerHTML = str;
+          //createScore(jsongames.games[i].gamePlayer[j].player.score, jsongames.games[i].gamePlayer[j].player.id);
           //console.log( '%c jsongames.games[i].gamePlayer[j].player.score', ' color: #156c77; font-weight: bold; ' );
-        }
+          
+}
+        
       }
-    }    
+    }
   
     
 
@@ -85,6 +100,8 @@ function createScore (score, playerId){
         }
     })
 }
+
+
 //funcion para ingresar 
 $("#login-button").click(login);
 function login(){ 

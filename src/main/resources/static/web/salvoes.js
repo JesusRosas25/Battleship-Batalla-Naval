@@ -1,3 +1,8 @@
+
+
+
+
+
 const createSalvoes = function (parent, isStatic){
 
     let salvoes = document.createElement('DIV')
@@ -131,5 +136,13 @@ const createSalvoes = function (parent, isStatic){
                 })
     }
     
-            
+            //DEVUELVE LAS CELDAS DONDE SE APUNTO PARA DISPARAR
+function getSalvoesCells(){
+    let celdas= document.querySelectorAll('.aimedSalvo')
+    let ubicaciones=[]
+
+    celdas.forEach(celda => ubicaciones.push(`${celda.dataset.y}${celda.dataset.x}`))
+
+    return ubicaciones;
+}
     

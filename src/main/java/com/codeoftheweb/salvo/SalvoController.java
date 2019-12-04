@@ -141,8 +141,8 @@ public class SalvoController {
             }else{
                 if (ships.stream().anyMatch(ship -> this.isOutOfRange(ship))){
                     response = new ResponseEntity<>(makeMap("error", "you have ships out of range"), HttpStatus.FORBIDDEN);
-                }else if(ships.stream().anyMatch(ship -> this.isNotConsecutive(ship))){
-                    response  = new ResponseEntity<>(makeMap("error", "your ships are not consecutive"), HttpStatus.FORBIDDEN);
+                /*¡}else if(ships.stream().anyMatch(ship -> this.isNotConsecutive(ship))){
+                    response  = new ResponseEntity<>(makeMap("error", "your ships are not consecutive"), HttpStatus.FORBIDDEN);*/
                 }else if(this.areOverLapped(ships)){
                     response = new ResponseEntity<>(makeMap("error", "your ships are overlapped"), HttpStatus.FORBIDDEN);
                 }else{

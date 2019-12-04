@@ -90,7 +90,7 @@
             
             
             <div   class= "col-sm-6" >
-            <table class= "table table-striped table-hover table condensed">
+            <table  class= "table table-striped table-hover table condensed">
             <thead class="thead-dark">
             <th>Player</th>
             <th>Total score</th>
@@ -100,14 +100,8 @@
             
             
             </thead>
-            <tbody >
-            <tr v-for = "pos in jsongames.gamePlayer">
-            <td >{{pos.username}}</td>
-            <td>{{pos.points}}</td>
-            <td>{{pos.won}}</td>
-            <td>{{pos.lost}}</td>
-            <td>{{pos.tied}}</td>
-            </tr>
+            <tbody id= "leaders">
+            
             </tbody>
             </table>
             </div>
