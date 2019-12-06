@@ -7,7 +7,7 @@ let opponent
 var getGameData;
 
 
-//TOMA EL GP DE LA URL
+//toma el ID de gamePlayer
 function getParamGP(){
 	
 	let param= (new URL(document.location)).searchParams;
@@ -212,12 +212,7 @@ function sendSalvoes(shots,gamePlayerId){
           
       })
 }
-//Habilita las celdas donde se disparo
-function disableAimed(){
-    let apuntados= document.querySelectorAll('.aimedSalvo')
 
-    apuntados.forEach(apuntado => apuntado.classList.remove('aimedSalvo'))
-}
 //recarga los datos del juego
 var recharge
 

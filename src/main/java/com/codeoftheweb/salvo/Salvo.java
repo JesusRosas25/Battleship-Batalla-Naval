@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.*;
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.persistence.ManyToOne;
 
 
@@ -51,6 +52,26 @@ public class Salvo {
 
     public void setGamePlayer(GamePlayer gamePlayer) { this.gamePlayer = gamePlayer; }
 
+    private List<String> getHits(List<String> myShots, Set<Ship> opponentShips){
+        List<String> allEnemyLocs = new ArrayList<>();
+        opponentShips.forEach(ship->allEnemyLocs.addAll(ship.getLocations()));
+        return myShots
+                .stream()
+                    .filter(shot-> allEnemyLocs
+                       .stream()
+                         .anyMatch(loc -> loc.equals(shot)))
+                              .collect(Collectors.toList());
+
+    private List<Ship> getSunkenShips(Set<Salvo> mySalvoes, Set<Ship>opponentShips){
+    List<String> allShots = new ArrayList<>();
+    mySalvoes.forEach(salvo ->allShots.addAll(salvo.getLocations()));
+
+    return opponentShips 
+    .stream()
+    .filter(ship -> allShots.containsAll(ship.getLocations()))
+    .collect(Collectors.toList());
+}
+    }
     /////////////////////DTO/////////////////////////
 
     public Map<String,Object> SalvoDTO(){
@@ -58,6 +79,18 @@ public class Salvo {
         dto.put("playerId", this.getGamePlayer().getPlayer().getId());
         dto.put("locations", this.getLocations());
         dto.put("turn", this.getTurn());
+
+        GamePlayer opponent = this.getGamePlayer().getOpponent();
+        if(opponent != null){
+            Set<Ship> enemyShips = opponent.getShips();
+            dto.put("hits", this.getHits(this.getLocations(),enemyShips));
+        Set<Salvo> mySalvoes = this.getHits(this.getLocations(),enemyShips));
+            .getSalvoes()
+            .stream()
+            .filter(salvo -> salvo.getTurn() <= this.getTurn())
+            .collect(Collectors.toSet());
+            dto.put("sunken", this.getSunkenShips(mySalvoes,enemyShips).stream().map(Ship::shipDTO));
+    }
         return dto;
     }
 
