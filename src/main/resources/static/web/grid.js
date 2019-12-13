@@ -1,7 +1,7 @@
 /*creates the grid structure. It requires a size, an element 
 where the grid will be attached to and an id to recognized it. 
 */
-const createGrid = function(size, element, id){
+const createGrid = function(size, element, id, isGridSalvo){
 
     let wrapper = document.createElement('DIV')//container of the grid
     wrapper.classList.add('grid-wrapper')
@@ -22,9 +22,15 @@ const createGrid = function(size, element, id){
                 cell.id = `${id}${String.fromCharCode(i - 1 + 65)}${ j }`
                 cell.dataset.y = String.fromCharCode(i - 1 + 65)
                 cell.dataset.x = j
+                if(isGridSalvo){
+                    cell.classList.add('available')
+                  }
                 cell.addEventListener('drop', function(event) {dropShip(event)})
                 cell.addEventListener('dragover',function(event) {allowDrop(event)})      
+                if(isGridSalvo){
+                    cell.addEventListener('click',function(event) {fire(event)})
             }
+          }
             //if j is equal to 0, the cells belongs to the first colummn, so the letter is added as text node
             if(j===0 && i > 0){
                 let textNode = document.createElement('SPAN')
@@ -134,3 +140,61 @@ function checkBusyCells(ship, cell){
         }
     }
 }
+//Muestra los salvos en el dock
+function createSalvoDock(numero) {
+  for (var i = 0; i < numero; i++) {
+    let div = document.createElement("div")
+    div.classList.add("salvo")
+    document.querySelector(".misiles").appendChild(div)
+  }
+}
+
+
+
+
+
+  //LE AGREGA LA CLASE A LAS CELDAS PARA DISPARAR, SOLO SI NO LES DISPARARON ANTES
+  function fire(event){
+      let cell= event.target
+      if(cell.classList.contains('available')){
+        if(document.querySelector('.remainingSalvo') && !cell.classList.contains('aimedSalvo')){
+          celda.classList.toggle('aimedSalvo')
+          document.querySelector('.remainingSalvo').remove()
+        }else{
+          if(cell.classList.contains('aimedSalvo')){
+            cell.classList.toggle('aimedSalvo')
+            let salvo=document.createElement('IMG')
+            salvo.classList.add('remainingSalvo')
+            //salvo.id= 'salvo'+i
+            salvo.src= 'assets/ships/salvo.png'
+            document.getElementById('available_salvo').append(salvo)
+          }else{
+            console.log('the arsenal is over for now')
+            document.querySelector('#display p').innerText= 'the arsenal is over for now'
+            
+          }
+        }
+      }
+      
+    }
+    /*if(cell.classList.contains('available')){
+      if(!cell.classList.contains('aimedSalvo')){
+        cell.classList.toggle('aimedSalvo')
+        document.querySelector('.remainingSalvo').remove()
+      }else{
+        if(cell.classList.contains('aimedSalvo')){
+          celdl.classList.toggle('aimedSalvo')
+          let salvo=document.createElement('style.background = "red"')
+          salvo.classList.add('remainingSalvo')
+          //salvo.id= 'salvo'+i
+          salvo.src= 'assets/ships/salvo.png'
+          document.getElementById('available_salvo').append(salvo)
+        }else{
+          console.log('ya disparaste todo tu arsenal en esta turno')
+          document.querySelector('#display p').innerText= 'No more anmo'
+          
+        }
+      }
+    }
+    
+  }*/

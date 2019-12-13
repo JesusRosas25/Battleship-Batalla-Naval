@@ -51,9 +51,7 @@ function createPos (){
   let str= ""
 for(var i in jsongames.games){ 
   for(var j in jsongames.games[i].gamePlayer){
-    
-  let unic = new Set(jsonGames.games[i].gamePlayer[j].player.username);
-          if (rev == undefined){
+        
               var obj = new Object();
               
               obj.userName = jsongames.games[i].gamePlayer[j].player.username;
@@ -65,7 +63,7 @@ for(var i in jsongames.games){
               
               createScore();
               str += `<tr>
-          <td>${unic}</td>
+          <td>${obj.userName}</td>
           <td>${jsongames.games[i].gamePlayer[j].player.points}</td>
           <td>${obj.won}</td>
           <td>${obj.tied}</td>
@@ -79,8 +77,7 @@ for(var i in jsongames.games){
 }
         
       }
-    }
-  
+    
     
 
 

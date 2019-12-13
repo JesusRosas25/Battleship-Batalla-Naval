@@ -1,8 +1,3 @@
-
-
-
-
-
 const createSalvoes = function (parent, isStatic){
 
     let salvoes = document.createElement('DIV')
@@ -16,22 +11,22 @@ const createSalvoes = function (parent, isStatic){
         salvoes.style.width = `${length * 45}px`
         salvoes.style.height= '45px'
     }else if(window.innerWidth >= 576){
-        salvo.style.width = `${length * 35}px` 
-        salvo.style.height = '35px'
+        salvoes.style.width = `${length * 35}px` 
+        salvoes.style.height = '35px'
     }else{
-        salvo.style.width = `${length * 30}px`
-        salvo.style.height = '30px'
+        salvoes.style.width = `${length * 30}px`
+        salvoes.style.height = '30px'
     }
     window.addEventListener('resize', () => {
         if(window.innerWidth >= 768){
-            salvo.style.width = `${length * 45}px` 
-            salvo.style.height = '45px'
+            salvoes.style.width = `${length * 45}px` 
+            salvoes.style.height = '45px'
         }else if(window.innerWidth >= 576){
-            salvo.style.width = `${length * 35}px` 
-            salvo.style.height = '35px'
+            salvoes.style.width = `${length * 35}px` 
+            salvoes.style.height = '35px'
         }else{
-            salvo.style.width = `${length * 30}px` 
-            salvo.style.height = '30px'
+            salvoes.style.width = `${length * 30}px` 
+            salvoes.style.height = '30px'
         }
         if(!isStatic){
             gripSalvo.classList.add('gripSalvo')
@@ -42,7 +37,7 @@ const createSalvoes = function (parent, isStatic){
             salvo.appendChild(gripSalvo)
         }
         content.classList.add('grid-item-content')
-        salvo.appendChild(content)
+        salvoes.appendChild(content)
 
         parent.appendChild(salvo)
 
@@ -135,14 +130,19 @@ const createSalvoes = function (parent, isStatic){
                 }
                 })
     }
-    
-            //DEVUELVE LAS CELDAS DONDE SE APUNTO PARA DISPARAR
+    createSalvoes(document.getElementById('dock'),false)
+    createSalvoes(document.getElementById('dock'),false)
+    createSalvoes(document.getElementById('dock'),false)
+    createSalvoes(document.getElementById('dock'),false)
+    createSalvoes(document.getElementById('dock'),false)
+
+            //Devuelve las celdas donde se apunto
 function getSalvoesCells(){
     let celdas= document.querySelectorAll('.aimedSalvo')
-    let ubicaciones=[]
+    let location=[]
 
-    celdas.forEach(celda => ubicaciones.push(`${celda.dataset.y}${celda.dataset.x}`))
+    celdas.forEach(celda => location.push(`${celda.dataset.y}${celda.dataset.x}`))
 
-    return ubicaciones;
+    return location;
 }
-    
+  
